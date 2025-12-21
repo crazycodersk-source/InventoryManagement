@@ -1,0 +1,14 @@
+@InventoryManagement_HostAddress = http://localhost:5115
+
+GET {{InventoryManagement_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+POST {{InventoryManagement_HostAddress}}/auth/login
+Accept: application/json
+Content-Type: application/json
+{
+  "Username":"manager",
+  "Password":"manager123"
+}
+###
