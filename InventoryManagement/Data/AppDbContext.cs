@@ -10,7 +10,7 @@ namespace InventoryManagement.Data
 
 		protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 		{
-			optionsBuilder.UseSqlServer("data source=IBM-PF255106; initial catalog=InventoryDB;integrated security=True;TrustServerCertificate=true");
+			optionsBuilder.UseSqlServer("data source=IBM-2FYLC64; initial catalog=InventoryDB;integrated security=True;TrustServerCertificate=true");
 		}
 
 		public AppDbContext(DbContextOptions<AppDbContext> options)

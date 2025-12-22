@@ -15,7 +15,7 @@ namespace InventoryManagement.Repositories
 		{
 			return _db.Products.ToList();
 		}
-
+		  
 		public List<Warehouse> GetAllWarehouses()
 		{
 			return _db.Warehouses.ToList();

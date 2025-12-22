@@ -1,11 +1,13 @@
 ﻿using InventoryManagement.DTOs;
 using InventoryManagement.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]/[action]")]
+
 	public class AuthController : ControllerBase
 	{
 		private readonly TokenService _tokenService;
@@ -23,7 +25,8 @@ namespace InventoryManagement.Controllers
 			("operator", "operator@123", "WarehouseOperator")
 			};
 
-		[HttpPost]
+        [AllowAnonymous]
+        [HttpPost]
 		public IActionResult Login([FromBody] LoginRequestDTO model)
 		{
 			var user = Users.FirstOrDefault(u =>
