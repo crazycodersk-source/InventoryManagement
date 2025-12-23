@@ -1,12 +1,15 @@
 
-using InventoryManagement.Services; // <-- Make sure this matches your namespace
+using InventoryManagement.Data;
+using InventoryManagement.Repositories;
+using InventoryManagement.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// CORS policy for local dev
+// CORS for local React (http://localhost:3000)
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("AllowAll", p => p
@@ -15,22 +18,34 @@ builder.Services.AddCors(opt =>
         .AllowAnyMethod());
 });
 
-// Register TokenService for DI
-builder.Services.AddSingleton<TokenService>();
-
-// Add controllers
+// MVC controllers
 builder.Services.AddControllers();
 
-// JWT authentication
+// --- EF Core DbContext ---
+builder.Services.AddDbContext<AppDbContext>(options =>
+{
+    var conn = builder.Configuration.GetConnectionString("DbConnection");
+    options.UseSqlServer(conn);
+});
+
+// --- Repository + Service registrations ---
+builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
+builder.Services.AddScoped<IInventoryService, InventoryService>();
+
+// --- Token service registration (fixes your error) ---
+builder.Services.AddSingleton<TokenService>();                 // If controller injects TokenService
+// builder.Services.AddSingleton<ITokenService, TokenService>(); // If controller injects ITokenService
+
+// --- JWT Auth ---
 builder.Services
-    .AddAuthentication(options =>
+    .AddAuthentication(o =>
     {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        o.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        o.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     })
-    .AddJwtBearer(options =>
+    .AddJwtBearer(o =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        o.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = true,
@@ -38,7 +53,7 @@ builder.Services
             ValidIssuer = builder.Configuration["Jwt:Issuer"],
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
         };
     });
 
@@ -47,10 +62,10 @@ builder.Services.AddAuthorization();
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");          // CORS before auth
+app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
-
