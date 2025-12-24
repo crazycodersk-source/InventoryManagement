@@ -19,7 +19,12 @@ builder.Services.AddCors(opt =>
 });
 
 // MVC controllers
-builder.Services.AddControllers();
+
+builder.Services.AddControllers().AddJsonOptions(o =>
+{
+    o.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+});
+
 
 // --- EF Core DbContext ---
 builder.Services.AddDbContext<AppDbContext>(options =>

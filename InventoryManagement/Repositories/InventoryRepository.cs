@@ -26,5 +26,11 @@ namespace InventoryManagement.Repositories
 			_db.Products.Update(product);
 			_db.SaveChanges();
 		}
-	}
+
+        public Product? GetById(int productId)
+        {
+            return _db.Products.FirstOrDefault(p => p.ProductId == productId);
+        }
+
+    }
 }

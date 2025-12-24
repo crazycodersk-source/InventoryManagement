@@ -7,5 +7,6 @@ namespace InventoryManagement.Services
 	{
 		List<ProductDTO> GetAll();
 		void Update(Product product);
-	}
+        Product? GetById(int productId);
+    }
 }

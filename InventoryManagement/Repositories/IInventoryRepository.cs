@@ -8,5 +8,6 @@ namespace InventoryManagement.Repositories
 		List<Product> GetAll();
 		void Update(Product product);
 		List<Warehouse> GetAllWarehouses();
-	}
+        Product? GetById(int productId);
+    }
 }

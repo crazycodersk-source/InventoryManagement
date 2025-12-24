@@ -45,6 +45,12 @@ namespace InventoryManagement.Services
         {
             _inventoryRepository.Update(product);
         }
+
+        public Product? GetById(int productId)
+        {
+            return _inventoryRepository.GetById(productId);
+        }
+
     }
 }
 
