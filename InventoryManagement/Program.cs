@@ -37,7 +37,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IInventoryRepository, InventoryRepository>();
 builder.Services.AddScoped<IInventoryService, InventoryService>();
 
-// --- Token service registration (fixes your error) ---
+
 builder.Services.AddSingleton<TokenService>();                 // If controller injects TokenService
 // builder.Services.AddSingleton<ITokenService, TokenService>(); // If controller injects ITokenService
 
